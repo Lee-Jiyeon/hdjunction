@@ -1,10 +1,14 @@
 package com.hdjunction.server.docapi.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "TI_VISIT")
 public class Visit {
     @Id
@@ -12,11 +16,11 @@ public class Visit {
     @Column(name="VISIT_ID")
     private Long visitId;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Hospital.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "HOSP_ID")
     private Hospital hospital;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = Patient.class, fetch = FetchType.LAZY)
     @JoinColumn(name = "PATIENT_ID")
     private Patient patient;
 

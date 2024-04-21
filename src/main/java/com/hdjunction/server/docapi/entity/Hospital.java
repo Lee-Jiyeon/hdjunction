@@ -1,12 +1,14 @@
 package com.hdjunction.server.docapi.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
+@Getter
+@Setter
 @Table(name="TI_HOSPITAL")
 public class Hospital {
     @Id
@@ -34,7 +36,4 @@ public class Hospital {
 
     @Column(name="UPDATE_ID")
     private String updateId;
-
-    @OneToMany(mappedBy = "hospital")
-    private List<Patient> patients = new ArrayList<>();
 }

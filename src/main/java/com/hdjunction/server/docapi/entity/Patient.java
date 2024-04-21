@@ -1,10 +1,14 @@
 package com.hdjunction.server.docapi.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Entity
+@Getter
+@Setter
 @Table(name = "TI_PATIENT")
 public class Patient {
     @Id
