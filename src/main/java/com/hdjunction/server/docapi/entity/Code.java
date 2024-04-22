@@ -18,16 +18,16 @@ public class Code {
     @Column(name="CODE_NAME")
     private String codeName;
 
-    @Column(name="CREATE_TIME")
+    @Column(name="CREATE_TIME", insertable=false, updatable=false)
     private Timestamp createTime;
 
-    @Column(name="CREATE_ID")
+    @Column(name="CREATE_ID", insertable=false, updatable=false)
     private String createId;
 
-    @Column(name="UPDATE_TIME")
+    @Column(name="UPDATE_TIME", insertable=false, updatable=false)
     private Timestamp updateTime;
 
-    @Column(name="UPDATE_ID")
+    @Column(name="UPDATE_ID", insertable=false, updatable=false)
     private String updateId;
 
 
