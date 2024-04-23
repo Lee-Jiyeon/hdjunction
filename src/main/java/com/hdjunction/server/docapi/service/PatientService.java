@@ -35,7 +35,7 @@ public class PatientService {
      */
     public List<PatientDto.Info> getPatientList() {
         return patientRepository.findAll().stream()
-                .map(entity -> PatientDto.Info.toDto(entity))
+                .map(PatientDto.Info::toDto)
                 .toList();
     }
 
@@ -44,11 +44,11 @@ public class PatientService {
      *
      * @param id 환자 고유의 patient id
      * @return 환자 정보 객체
-     * @throws CustomException
+     * @throws CustomException id에 따른 환자 정보가 존재하지 않을 경우
      */
     public PatientDto.Info getPatient(Long id) {
         return patientRepository.findById(id)
-                .map(entity -> PatientDto.Info.toDto(entity))
+                .map(PatientDto.Info::toDto)
                 .orElseThrow(() -> new CustomException(ErrorCode.PATIENT_NOT_FOUND));
     }
 
@@ -68,7 +68,7 @@ public class PatientService {
      * @param patientId 환자 고유의 patient id
      * @param hospitalId 내원한 병원의 hospital id
      * @return 환자 정보 및 내원 기록 조회 객체
-     * @throws CustomException
+     * @throws CustomException 각 id에 따른 환자 정보 혹은 병원 정보가 존재하지 않을 경우
      */
     public PatientDto.Lookup getPatient(Long patientId, Long hospitalId) {
         if (!hospitalRepository.existsById(hospitalId))
@@ -112,7 +112,7 @@ public class PatientService {
      *
      * @param dto 수정 가능한 항목에 대한 수정용 환자 객체
      * @return 수정된 환자의 patient id
-     * @throws CustomException
+     * @throws CustomException id에 따른 환자 정보가 존재하지 않을 경우
      */
     @Transactional
     public Long updatePatient(PatientDto.Update dto) {
@@ -136,7 +136,7 @@ public class PatientService {
      * 환자 정보를 삭제한다.
      *
      * @param id 삭제할 환자의 patient id
-     * @throws CustomException
+     * @throws CustomException id에 따른 환자 정보가 존재하지 않을 경우
      */
     public void deletePatient(Long id) {
         if (!patientRepository.existsById(id))
@@ -150,7 +150,7 @@ public class PatientService {
      *
      * @param currentNum 최종 환자 등록 번호
      * @return 최종 환자 등록 번호에서 1 더해진 신규 등록 번호
-     * @throws CustomException
+     * @throws CustomException 올해 신규 환자 등록 수가 5자리 수를 넘을 경우
      */
     private static String countRgstNum(String currentNum) {
         // 번호 포맷 : yyyynnnnn
