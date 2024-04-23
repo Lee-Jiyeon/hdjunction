@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="PATIENT_ID", updatable=false)
+    @Column(name="PATIENT_ID", insertable=false, updatable=false)
     private Long patientId;
 
     @ManyToOne
@@ -23,7 +23,7 @@ public class Patient {
     @Column(name="PATIENT_NAME")
     private String patientName;
 
-    @Column(name="RGST_NUM")
+    @Column(name="RGST_NUM", updatable=false)
     private String rgstNum;
 
     @Column(name="SEX_CODE")

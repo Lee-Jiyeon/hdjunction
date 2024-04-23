@@ -40,8 +40,8 @@ public class VisitService {
         HospitalDto hospitalDto = hospitalRepository.findById(dto.getHospitalId())
                 .map(entity -> HospitalDto.toDto(entity))
                 .orElseThrow(() -> new CustomException(ErrorCode.HOSPITAL_NOT_FOUND));
-        PatientDto patientDto = patientRepository.findById(dto.getPatientId())
-                .map(entity -> PatientDto.toDto(entity))
+        PatientDto.Info patientDto = patientRepository.findById(dto.getPatientId())
+                .map(entity -> PatientDto.Info.toDto(entity))
                 .orElseThrow(() -> new CustomException(ErrorCode.PATIENT_NOT_FOUND));
 
         return visitRepository.save(VisitDto.toEntity(dto, hospitalDto, patientDto)).getVisitId();
@@ -52,7 +52,7 @@ public class VisitService {
         if (!visitRepository.existsById(dto.getVisitId()))
             throw new CustomException(ErrorCode.VISIT_NOT_FOUND);
 
-        return visitRepository.save(VisitDto.toEntity(dto)).getVisitId();
+        return visitRepository.save(dto.toEntity()).getVisitId();
     }
 
     public void deleteVisit(Long id) {

@@ -43,21 +43,21 @@ public class VisitDto {
                 .toList();
     }
 
-    public static Visit toEntity(VisitDto vDto, HospitalDto hDto, PatientDto pDto) {
+    public static Visit toEntity(VisitDto vDto, HospitalDto hDto, PatientDto.Info pDto) {
         return Visit.builder()
                 .visitId(vDto.getVisitId())
-                .hospital(HospitalDto.toEntity(hDto))
-                .patient(PatientDto.toEntity(pDto, HospitalDto.toEntity(hDto)))
+                .hospital(hDto.toEntity())
+                .patient(pDto.toEntity(hDto.toEntity()))
                 .receiptDate(vDto.getReceiptDate())
                 .visitStat(vDto.getVisitStat())
                 .build();
     }
 
-    public static Visit toEntity(VisitDto vDto) {
+    public Visit toEntity() {
         return Visit.builder()
-                .visitId(vDto.getVisitId())
-                .receiptDate(vDto.getReceiptDate())
-                .visitStat(vDto.getVisitStat())
+                .visitId(this.getVisitId())
+                .receiptDate(this.getReceiptDate())
+                .visitStat(this.getVisitStat())
                 .build();
     }
 }

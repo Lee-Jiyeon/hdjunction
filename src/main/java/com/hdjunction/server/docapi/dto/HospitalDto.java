@@ -31,12 +31,12 @@ public class HospitalDto {
                 .build();
     }
 
-    public static Hospital toEntity(HospitalDto dto) {
+    public Hospital toEntity() {
         return Hospital.builder()
-                .hospId(dto.getHospId())
-                .hospName(dto.getHospName())
-                .healthInstNum(dto.getHealthInstNum())
-                .directorName(dto.getDirectorName())
+                .hospId(this.getHospId())
+                .hospName(this.getHospName())
+                .healthInstNum(this.getHealthInstNum())
+                .directorName(this.getDirectorName())
                 .build();
     }
 }
