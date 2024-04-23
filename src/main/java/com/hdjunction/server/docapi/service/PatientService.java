@@ -12,11 +12,14 @@ import com.hdjunction.server.docapi.repository.PatientRepository;
 import com.hdjunction.server.docapi.repository.VisitCustomRepositoryImpl;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PatientService {
@@ -96,7 +99,7 @@ public class PatientService {
                 .orElseThrow(() -> new CustomException(ErrorCode.HOSPITAL_NOT_FOUND));
         // 병원에 따라 마지막으로 등록된 등록 번호를 가져온다.
         String lastRgstNum = patientCustomRepository.findPatientMaxRgstNumByHospital(hospitalEntity);
-        // 마지막 등록 번호에 1을 추가한 등록 번호 문자열(13자)을 생성한다.
+        // 마지막 등록 번호에 1을 추가한 등록 번호 문자열(9자)을 생성한다.
         String newRgstNum = countRgstNum(lastRgstNum);
 
         return patientRepository.save(dto.toEntity(hospitalEntity, newRgstNum))
@@ -150,9 +153,36 @@ public class PatientService {
      * @throws CustomException
      */
     private static String countRgstNum(String currentNum) {
-        long count = 0;
-        if (currentNum != null)
-            count = Long.parseLong(currentNum);
-        return String.format("%013d", count + 1);
+        // 번호 포맷 : yyyynnnnn
+        LocalDate date = LocalDate.now();
+        String currentYear = String.valueOf(date.getYear());
+        String resultRgstNum = Strings.concat(currentYear, "00001");
+
+        // 등록 번호가 없으면 올해 연도 + 00001로 생성한다.
+        if (currentNum == null)
+            return resultRgstNum;
+
+        // 앞의 연도 4자리와 뒤의 count 숫자를 분리한다.
+        String yearStr = currentNum.substring(0, 4);
+        String countStr = currentNum.substring(4);
+
+        // 최종 등록 번호가 올해가 아니면 올해 연도 + 00001로 생성한다.
+        if (!yearStr.equals(currentYear))
+            return resultRgstNum;
+
+        int count = Integer.parseInt(countStr) + 1;
+        // count 자릿수가 5보다 작을 때 빈자리를 0으로 채운다.
+        int length = (int)(Math.log10(count) + 1);
+        if (length < 5)
+            resultRgstNum = String.format("%s%05d", currentYear, count);
+        else if (length > 5)
+            /*
+             * TODO: 올해 등록된 환자 수가 99999명을 넘는 케이스에 대한 로직 구현
+             * h2 DB를 변경하거나 등록번호 룰이 숫자로 한정된다면 INT 타입으로 변경
+             */
+            throw new CustomException(ErrorCode.PATIENT_REGIST_NUMBER_LIMIT);
+        else resultRgstNum = String.format("%s%d", currentYear, count);
+
+        return resultRgstNum;
     }
 }
