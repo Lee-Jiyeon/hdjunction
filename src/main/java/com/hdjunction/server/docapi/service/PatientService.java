@@ -1,6 +1,7 @@
 package com.hdjunction.server.docapi.service;
 
 import com.hdjunction.server.docapi.dto.PatientDto;
+import com.hdjunction.server.docapi.dto.SearchDto;
 import com.hdjunction.server.docapi.dto.VisitDto;
 import com.hdjunction.server.docapi.entity.Hospital;
 import com.hdjunction.server.docapi.entity.Patient;
@@ -56,10 +57,11 @@ public class PatientService {
      * 병원의 전체 환자 리스트를 조회한다.
      *
      * @param hospitalId 병원 고유의 hospital id
-     * @return 병원에 등록된 전체 환자 리스트
+     * @param searchDto 환자 리스트 검색 조건
+     * @return 병원에 등록된 전체 환자 중 검색 조건에 부합한 리스트
      */
-    public List<PatientDto.LookupList> getPatientList(Long hospitalId) {
-        return patientCustomRepository.findAllPatientInfoByHospital(hospitalId);
+    public List<PatientDto.LookupList> getPatientList(Long hospitalId, SearchDto.Patient searchDto) {
+        return patientCustomRepository.findAllPatientInfoByHospital(hospitalId, searchDto);
     }
 
     /**

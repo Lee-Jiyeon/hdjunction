@@ -1,6 +1,7 @@
 package com.hdjunction.server.docapi.repository;
 
 import com.hdjunction.server.docapi.dto.PatientDto;
+import com.hdjunction.server.docapi.dto.SearchDto;
 import com.hdjunction.server.docapi.entity.Hospital;
 import com.hdjunction.server.docapi.entity.Patient;
 
@@ -14,5 +15,5 @@ public interface PatientCustomRepository {
     Patient findPatientInfoByHospital(Long patientId, Long hospitalId);
 
     // 병원별 모든 환자 정보 조회
-    List<PatientDto.LookupList> findAllPatientInfoByHospital(Long hospitalId);
+    List<PatientDto.LookupList> findAllPatientInfoByHospital(Long hospitalId, SearchDto.Patient searchDto);
 }

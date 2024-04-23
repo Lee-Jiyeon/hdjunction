@@ -1,6 +1,7 @@
 package com.hdjunction.server.docapi.controller;
 
 import com.hdjunction.server.docapi.dto.PatientDto;
+import com.hdjunction.server.docapi.dto.SearchDto;
 import com.hdjunction.server.docapi.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,14 +32,23 @@ public class PatientController {
     }
 
     @GetMapping("/lookup")
-    public ResponseEntity<List<PatientDto.LookupList>> getAllPatient(@RequestHeader Long hospitalId) {
-        log.info("[hospitalId: {}] 병원의 모든 환자 정보를 조회합니다.", hospitalId);
-        return ResponseEntity.ok(patientService.getPatientList(hospitalId));
+    public ResponseEntity<List<PatientDto.LookupList>> getAllPatient(@RequestHeader Long hospitalId,
+                                                                     @RequestParam(required = false) String name,
+                                                                     @RequestParam(required = false) String rgstNum,
+                                                                     @RequestParam(required = false) String birthDate) {
+        log.info("[hospitalId: {}] 병원의 모든 환자 정보를 조회합니다. (검색 조건 => 이름 [{}] 등록번호 [{}] 생년월일 [{}])"
+                , hospitalId, name, rgstNum, birthDate);
+        SearchDto.Patient searchDto = SearchDto.Patient.builder()
+                                                    .patientName(name)
+                                                    .rgstNum(rgstNum)
+                                                    .birthDate(birthDate)
+                                                    .build();
+        return ResponseEntity.ok(patientService.getPatientList(hospitalId, searchDto));
     }
 
     @GetMapping("/lookup/{id}")
     public ResponseEntity<PatientDto.Lookup> getPatientById(@RequestHeader Long hospitalId,
-                                                     @PathVariable Long id) {
+                                                            @PathVariable Long id) {
         log.info("[patientId: {} / hospitalId: {}] 내원한 환자 정보를 조회합니다.", id, hospitalId);
         return ResponseEntity.ok(patientService.getPatient(id, hospitalId));
     }

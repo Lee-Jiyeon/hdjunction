@@ -1,9 +1,11 @@
 package com.hdjunction.server.docapi.repository;
 
 import com.hdjunction.server.docapi.dto.PatientDto;
+import com.hdjunction.server.docapi.dto.SearchDto;
 import com.hdjunction.server.docapi.entity.Hospital;
 import com.hdjunction.server.docapi.entity.Patient;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -14,6 +16,7 @@ import java.util.List;
 
 import static com.hdjunction.server.docapi.entity.QPatient.patient;
 import static com.hdjunction.server.docapi.entity.QVisit.visit;
+import static org.springframework.util.StringUtils.hasText;
 
 @Repository
 @RequiredArgsConstructor
@@ -39,7 +42,7 @@ public class PatientCustomRepositoryImpl implements PatientCustomRepository{
     }
 
     @Override
-    public List<PatientDto.LookupList> findAllPatientInfoByHospital(Long hospitalId) {
+    public List<PatientDto.LookupList> findAllPatientInfoByHospital(Long hospitalId, SearchDto.Patient searchDto) {
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "FORMATDATETIME({0}, {1})"
                 , visit.receiptDate.max()
@@ -59,8 +62,23 @@ public class PatientCustomRepositoryImpl implements PatientCustomRepository{
                 .from(patient)
                 .leftJoin(visit)
                 .on(patient.eq(visit.patient))
-                .where(patient.hospital.hospId.eq(hospitalId))
+                .where(patient.hospital.hospId.eq(hospitalId),
+                        patientNameContains(searchDto.getPatientName()),
+                        rgstNumStartWith(searchDto.getRgstNum()),
+                        birthDateContains(searchDto.getBirthDate()))
                 .groupBy(patient.patientId)
                 .fetch();
+    }
+
+    private BooleanExpression patientNameContains(String patientName) {
+        return hasText(patientName) ? patient.patientName.contains(patientName) : null;
+    }
+
+    private BooleanExpression rgstNumStartWith(String rgstNum) {
+        return hasText(rgstNum) ? patient.rgstNum.startsWith(rgstNum) : null;
+    }
+
+    private BooleanExpression birthDateContains(String birthDate) {
+        return hasText(birthDate) ? patient.birthDate.contains(birthDate) : null;
     }
 }
