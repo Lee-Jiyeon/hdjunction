@@ -91,7 +91,7 @@ public class PatientService {
      *
      * @param dto 입력 받을 수 있는 생성용 환자 객체
      * @return 신규 생성된 환자의 patient id
-     * @throws CustomException
+     * @throws CustomException id에 따른 병원 정보가 존재하지 않을 경우
      */
     @Transactional
     public Long createPatient(PatientDto.Create dto) {
