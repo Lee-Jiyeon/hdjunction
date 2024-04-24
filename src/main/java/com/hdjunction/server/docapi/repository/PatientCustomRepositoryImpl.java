@@ -8,8 +8,12 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.core.types.dsl.StringTemplate;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -42,13 +46,15 @@ public class PatientCustomRepositoryImpl implements PatientCustomRepository{
     }
 
     @Override
-    public List<PatientDto.LookupList> findAllPatientInfoByHospital(Long hospitalId, SearchDto.Patient searchDto) {
+    public Page<PatientDto.LookupList> findAllPatientInfoByHospital(Long hospitalId,
+                                                                    SearchDto.Patient searchDto,
+                                                                    Pageable pageable) {
         StringTemplate formattedDate = Expressions.stringTemplate(
                 "FORMATDATETIME({0}, {1})"
                 , visit.receiptDate.max()
                 , "Y-MM-dd");
 
-        return jpaQueryFactory
+        List<PatientDto.LookupList> patientList = jpaQueryFactory
                 .select(Projections.fields(PatientDto.LookupList.class
                         , patient.patientId
                         , patient.hospital.hospId.as("hospitalId")
@@ -67,7 +73,19 @@ public class PatientCustomRepositoryImpl implements PatientCustomRepository{
                         rgstNumStartWith(searchDto.getRgstNum()),
                         birthDateContains(searchDto.getBirthDate()))
                 .groupBy(patient.patientId)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .fetch();
+
+        JPAQuery<Long> totalCount = jpaQueryFactory
+                .select(patient.count())
+                .from(patient)
+                .where(patient.hospital.hospId.eq(hospitalId),
+                        patientNameContains(searchDto.getPatientName()),
+                        rgstNumStartWith(searchDto.getRgstNum()),
+                        birthDateContains(searchDto.getBirthDate()));
+
+        return PageableExecutionUtils.getPage(patientList, pageable, totalCount::fetchOne);
     }
 
     private BooleanExpression patientNameContains(String patientName) {

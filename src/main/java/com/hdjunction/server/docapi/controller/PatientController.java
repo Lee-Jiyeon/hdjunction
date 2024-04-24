@@ -5,6 +5,8 @@ import com.hdjunction.server.docapi.dto.SearchDto;
 import com.hdjunction.server.docapi.service.PatientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -32,18 +34,22 @@ public class PatientController {
     }
 
     @GetMapping("/lookup")
-    public ResponseEntity<List<PatientDto.LookupList>> getAllPatient(@RequestHeader Long hospitalId,
+    public ResponseEntity<Page<PatientDto.LookupList>> getAllPatient(@RequestHeader Long hospitalId,
                                                                      @RequestParam(required = false) String name,
                                                                      @RequestParam(required = false) String rgstNum,
-                                                                     @RequestParam(required = false) String birthDate) {
-        log.info("[hospitalId: {}] 병원의 모든 환자 정보를 조회합니다. (검색 조건 => 이름 [{}] 등록번호 [{}] 생년월일 [{}])"
-                , hospitalId, name, rgstNum, birthDate);
+                                                                     @RequestParam(required = false) String birthDate,
+                                                                     @RequestParam(required = false, defaultValue = "1") Integer pageNo,
+                                                                     @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+        log.info("[hospitalId: {}] 병원의 모든 환자 정보를 조회합니다. (검색 조건 => 이름 [{}] 등록번호 [{}] 생년월일 [{}] 페이지 => {}/{})"
+                , hospitalId, name, rgstNum, birthDate, pageNo, pageSize);
         SearchDto.Patient searchDto = SearchDto.Patient.builder()
                                                     .patientName(name)
                                                     .rgstNum(rgstNum)
                                                     .birthDate(birthDate)
                                                     .build();
-        return ResponseEntity.ok(patientService.getPatientList(hospitalId, searchDto));
+        // pageNo은 1부터 시작, 0부터 인덱싱하기 위해 -1 해줌.
+        PageRequest pageRequest = PageRequest.of(pageNo - 1, pageSize);
+        return ResponseEntity.ok(patientService.getPatientList(hospitalId, searchDto, pageRequest));
     }
 
     @GetMapping("/lookup/{id}")
@@ -70,11 +76,11 @@ public class PatientController {
         log.info("[patientId: {}] 환자 정보를 수정합니다.", dto.getPatientId());
         // 변경 불가 항목 - patientId, hospitalId
         Long updatedId = patientService.updatePatient(dto);
-        return ResponseEntity.ok(dto.getPatientId());
+        return ResponseEntity.ok(updatedId);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deletePatient(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePatient(@PathVariable Long id) {
         log.info("[patientId: {}] 환자 정보를 삭제합니다.", id);
         patientService.deletePatient(id);
         return ResponseEntity.ok().build();

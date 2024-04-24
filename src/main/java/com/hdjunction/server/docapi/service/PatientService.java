@@ -15,6 +15,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -58,10 +60,13 @@ public class PatientService {
      *
      * @param hospitalId 병원 고유의 hospital id
      * @param searchDto 환자 리스트 검색 조건
+     * @param pageable 환자 조회 페이징 정보
      * @return 병원에 등록된 전체 환자 중 검색 조건에 부합한 리스트
      */
-    public List<PatientDto.LookupList> getPatientList(Long hospitalId, SearchDto.Patient searchDto) {
-        return patientCustomRepository.findAllPatientInfoByHospital(hospitalId, searchDto);
+    public Page<PatientDto.LookupList> getPatientList(Long hospitalId,
+                                                      SearchDto.Patient searchDto,
+                                                      Pageable pageable) {
+        return patientCustomRepository.findAllPatientInfoByHospital(hospitalId, searchDto, pageable);
     }
 
     /**
