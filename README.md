@@ -1,5 +1,4 @@
 # HDJunction 환자 관리 백엔드 서버
-- - -
 <p align="center">
 <img src="img/hdjunction_logo.png" width="700" height="230">
 </p>
@@ -8,17 +7,15 @@
 환자 정보는 병원별로 관리가 가능하며 검색 조건에 따라 조회하고, 추가, 수정, 삭제 기능을 사용할 수 있습니다.
 
 ## 목차
-- - -
 * [개요](#개요)
 * [프로젝트 소개](#프로젝트-소개)
-* [Stacks](#Stacks)
+* [Stacks](#stacks)
 * [시작 가이드](#시작-가이드)
 * [주요 기능](#주요-기능)
 * [화면 기획](#화면-기획)
 * [프로젝트 구조](#프로젝트-구조)
 
 ## 개요
-- - -
 * 프로젝트 이름 : HDJunction 환자 관리 백엔드 서버
 * 프로젝트 개발 기간 : 2024.04.19 ~ 2024.04.24
 * 개발 언어 : `Java`
@@ -26,7 +23,6 @@
 * 개발자 : 이지연
 
 ## 프로젝트 소개
-- - -
 HDJunction에서는 수준 높은 Healthcare IT 서비스를 제공합니다.
 의료계 플랫폼을 발전시켜 진료 효율성을 높이고 환자와 의사 사이의 불편함을 해소시켜 모두가 건강한 삶을 살아갈 수 있도록 노력하고 있습니다.
 
@@ -34,7 +30,7 @@ HDJunction에서는 수준 높은 Healthcare IT 서비스를 제공합니다.
 또한 귀사의 비전에 발맞춰 나아가기 위한 초석이 되어 향후 다양한 서비스 개발의 발판이 되기를 희망합니다.
 
 ## Stacks
-
+<div> 
 <img src="https://img.shields.io/badge/Java-007396?style=flat-square&logo=Java&logoColor=white">
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=flat-square&logo=springboot&logoColor=white"/>
 <img src="https://img.shields.io/badge/Gradle-02303A?style=flat-square&logo=Gradle&logoColor=white"/>
@@ -44,9 +40,9 @@ HDJunction에서는 수준 높은 Healthcare IT 서비스를 제공합니다.
 <img src="https://img.shields.io/badge/Querydsl-0099FF?style=flat-square&logo=Querydsl&logoColor=white">
 <img src="https://img.shields.io/badge/intellijidea-000000?style=flat-square&logo=intellijidea&logoColor=white"/>
 <img src="https://img.shields.io/badge/github-181717?style=flat-square&logo=github&logoColor=white"/>
+</div>
 
 ## 시작 가이드
-- - -
 ### Requirements
 * [openjdk 21.0.2](https://jdk.java.net/21/)
 
@@ -64,7 +60,6 @@ $ java -jar docapi-0.0.1-SNAPSHOT.jar
 Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는지 확인해야 합니다.
 
 ## 주요 기능
-- - -
 <details style="margin-left:15px; font-size:16px">
 <summary>전체 환자 목록 조회</summary>
 
@@ -81,7 +76,7 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
 * **Response : `객체 리스트`**
 
   |  이름   |   타입   |    설명     |
-    |:-----:|:------:|:---------:|
+  |:-----:|:------:|:---------:|
   | patientId  |  Long  |   환자 id   |
   | hospitalId  |  Long  |   병원 id   |
   | patientName  | String |   환자 이름   |
@@ -121,7 +116,7 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
 * **Response : `단일 객체`**
 
   |  이름   |   타입   |    설명     |
-      |:-----:|:------:|:---------:|
+  |:-----:|:------:|:---------:|
   | patientId  |  Long  |   환자 id   |
   | hospitalId  |  Long  |   병원 id   |
   | patientName  | String |   환자 이름   |
@@ -165,7 +160,7 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
 * **Request Parameter**
 
     |     이름     |   타입    | 필수 여부 | 디폴트 값 |      설명      |
-      |:----------:|:-------:|:-----:|:-----:|:------------:|
+    |:----------:|:-------:|:-----:|:-----:|:------------:|
     | name | String  | `선택`  |       |    검색할 이름    |
     | rgstNum | String  | `선택`  |       | 검색할 환자 등록 번호 |
     | birthDate | String  | `선택`  |       | 검색할 환자 생년월일  |
@@ -177,7 +172,7 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
     [Page 객체 정보 참고](https://docs.spring.io/spring-data/commons/docs/current/api/org/springframework/data/domain/Page.html)
 
   |  이름   |      타입       |    설명     |
-        |:-----:|:-------------:|:---------:|
+  |:-----:|:-------------:|:---------:|
   | patientId  |     Long      |   환자 id   |
   | hospitalId  |     Long      |   병원 id   |
   | patientName  |    String     |   환자 이름   |
@@ -300,7 +295,7 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
 * **Request Body**
 
   |  이름   |       타입       | 필수 여부 |    설명     |
-            |:-----:|:--------------:|:-----:|:---------:|
+  |:-----:|:--------------:|:-----:|:---------:|
   | hospitalId  |      Long      | `필수`  |   병원 id   |
   | patientName  |      String      | `필수`  |   환자 이름   |
   | sexCode  |     String     | `필수`  |   환자 성별   |
@@ -334,7 +329,7 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
 * **Request Body**
 
   |  이름   |       타입       | 필수 여부 |    설명     |
-              |:-----:|:--------------:|:-----:|:---------:|
+  |:-----:|:--------------:|:-----:|:---------:|
   | patientId  |      Long      | `필수`  |   환자 id   |
   | patientName  |      String      | `선택`  |   환자 이름   |
   | sexCode  |     String     | `선택`  |   환자 성별   |
@@ -376,11 +371,9 @@ Entity 생성에 실패할 땐 해당 db 파일이 정상적으로 존재하는�
 </details>
 
 ## 화면 기획
-- - -
 <img src="img/view.png" width="900" height="500">
 
 ## 프로젝트 구조
-- - -
 ### ERD
 <img src="img/hdjuction_erd.png" width="600" height="680">
 
