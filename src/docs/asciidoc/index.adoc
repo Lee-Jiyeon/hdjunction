@@ -1,0 +1,16 @@
+= PATIENT API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+
+== 환자 정보 조회
+
+=== Request
+
+include::{snippets}/patient/http-request.adoc[]
+
+=== Response
+
+include::{snippets}/patient/http-response.adoc[]
