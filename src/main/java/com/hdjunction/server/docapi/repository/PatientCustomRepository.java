@@ -7,8 +7,6 @@ import com.hdjunction.server.docapi.entity.Patient;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 public interface PatientCustomRepository {
     // 병원별 최종 환자 등록 번호 조회
     String findPatientMaxRgstNumByHospital(Hospital hospital);
